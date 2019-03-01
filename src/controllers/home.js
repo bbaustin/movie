@@ -3,7 +3,6 @@ const express       = require('express'),
     HomeController  = express.Router(),
     Boss            = require(__dirname + '/../models/boss'),
     Employee        = require(__dirname + '/../models/employee'),
-    bcrypt          = require('bcrypt'),
     session         = require('express-session'),
     fetch           = require("node-fetch"),
     request         = require('request'),
@@ -108,6 +107,20 @@ HomeController.route('/?')
 
 
 
+
+
+        // var promise = new Promise(function(resolve, reject) {
+        //   // do a thing, possibly async, then…
+
+        //   if ( everything turned out fine ) {
+        //     resolve("Stuff worked!");
+        //   }
+        //   else {
+        //     reject(Error("It broke"));
+        //   }
+        // });
+
+
 // This should be separate function but I suck with scope 
 // This part is gonna run crawler through Tsutaya's site
 // It's using the helper above to get a URL. 
@@ -116,21 +129,24 @@ HomeController.route('/?')
         console.log("Visiting page " + pageToVisit);
 
         var tsutayaTitle = "Searching..........!";
+        var promise = new Promise(function(resolve, reject) {
+        // Do async job
         request(pageToVisit, function(error, response, body) {
+
           if(error) {
             console.log("Error: " + error);
           }
           // Check status code (200 is HTTP OK)
-          console.log("Status code: " + response.statusCode);
+          // console.log("Status code: " + response.statusCode);
           if(response.statusCode === 200) {
             // Parse the document body
             var $ = cheerio.load(body);
-            // console.log("JP Title:  " + $('.c_thumb_tit').first().text());
-            tsutayaTitle = $('.c_thumb_tit').first().text();
-            console.log('tsutayaTitle: ' + tsutayaTitle);
+            console.log("JP Title:  " + $('.c_thumb_tit').first().text());
+            resolve(tsutayaTitle = $('.c_thumb_tit').first().text());
           }
         })
         return tsutayaTitle;
+      })
       } //makeTitleforURL 
     }); //post 
 
