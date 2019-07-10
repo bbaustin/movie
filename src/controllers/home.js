@@ -59,9 +59,17 @@ HomeController.route('/?')
                   //console.log(makeTitleForURL(req.body.movieTitle));
 
                   if (altTitleData.titles.length > 0) {    // Check if array of titles is empty
-                    callback(null, altTitleData.titles[0].title);
+                    return altTitleData.titles[0].title;
+                  } else {
+                    return 'Sorry, no Japanese title found.';
                   }
+                }).then(result => {
+                  callback(null, result);
+                }).catch(altTitleErr => {
+                  callback(null, 'Error 833: Sorry, there was an error finding your alternative title.');
                 })
+              }).catch(err => {
+                callback(null, 'Error 834: Sorry, there was an error with your movie title submission.')
               })
             },
 
@@ -142,9 +150,9 @@ HomeController.route('/?')
 
 
 
+/*
 
-
-    /*  //MOVIEDB THING!
+      //MOVIEDB THING!
       fetch(url).then(response => {
         return response.json();
       }).then(data => {
@@ -185,7 +193,7 @@ HomeController.route('/?')
         res.render('home', {
           message: 'Error 834: Sorry, there was an error with your movie title submission.'
         })
-      })*/
+      })
 
 
 /*
